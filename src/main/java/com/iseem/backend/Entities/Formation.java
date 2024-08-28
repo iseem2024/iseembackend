@@ -27,8 +27,6 @@ public class Formation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String nom;
-    @Column(length =1000)
-    private String description;
     private int duree;
     private String uniteDuree;
     @Temporal(TemporalType.DATE)
@@ -38,7 +36,6 @@ public class Formation {
     @Column(name = "formation_condition")
     private String condition;
     private String type;
-    private float prix;
     
     @OneToMany(mappedBy = "formation")
     @JsonIgnore
@@ -48,8 +45,4 @@ public class Formation {
     @JsonIgnore
     private List<Appel> appels;
 
-    @ElementCollection
-    private List<Module> modulesYear1;
-    @ElementCollection
-    private List<Module> modulesYear2;
 }

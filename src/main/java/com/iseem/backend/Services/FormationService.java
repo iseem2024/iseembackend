@@ -32,14 +32,6 @@ public class FormationService implements IDao<Formation> {
 
     @Override
     public Formation create(Formation formation) {
-        if (formation.getType().equals("continue")) {
-            formation.setModulesYear1(null);
-            formation.setModulesYear2(null);
-        } else {
-            if (formation.getDuree() == 10) {
-                formation.setModulesYear2(null);
-            }
-        }
         return formationRepository.save(formation);
     }
 
@@ -49,27 +41,11 @@ public class FormationService implements IDao<Formation> {
                 .orElseThrow(() -> new NotFoundException("Formation not found with id : " + formation.getId()));
 
         existingFormation.setNom(formation.getNom());
-        existingFormation.setDescription(formation.getDescription());
         existingFormation.setDateDebut(formation.getDateDebut());
         existingFormation.setDateFin(formation.getDateFin());
         existingFormation.setDuree(formation.getDuree());
         existingFormation.setCondition(formation.getCondition());
         existingFormation.setType(formation.getType());
-        existingFormation.setPrix(formation.getPrix());
-        if(formation.getType().equals("continue")){
-            existingFormation.setModulesYear1(null);
-            existingFormation.setModulesYear2(null);
-        }
-        else {
-            if(formation.getDuree() == 10){
-                existingFormation.setModulesYear1(formation.getModulesYear1());
-                existingFormation.setModulesYear2(null);
-            }else{
-                existingFormation.setModulesYear1(formation.getModulesYear1());
-                existingFormation.setModulesYear2(formation.getModulesYear2());
-            }
-        }
-
         return formationRepository.save(existingFormation);
     }
 

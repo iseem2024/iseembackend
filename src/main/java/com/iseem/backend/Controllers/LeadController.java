@@ -1,16 +1,22 @@
 package com.iseem.backend.Controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.iseem.backend.DTO.LeadDTO;
+import com.iseem.backend.DTO.LeadDTO;
 import com.iseem.backend.DTO.LeadDuplicationDTO;
 import com.iseem.backend.DTO.LeadsFormationDTO;
 import com.iseem.backend.Entities.Lead;
 import com.iseem.backend.Services.LeadService;
 
 import java.time.LocalDate;
+import java.time.Year;
+import java.time.YearMonth;
 import java.util.List;
 
 @RestController
@@ -113,5 +119,36 @@ public class LeadController {
     public ResponseEntity<Lead> searchLead(@PathVariable String telephone) {
         Lead lead = leadService.searchLead(telephone);
         return ResponseEntity.ok(lead);
+    }
+
+     @GetMapping("/day/{userId}")
+    public Page<LeadDTO> getLeadsByDay(@PathVariable("userId") int userId,
+                                      @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+                                      @RequestParam(defaultValue = "0") int page,
+                                      @RequestParam(defaultValue = "10") int size) {
+        return leadService.getLeadsByDay(userId, date, page, size);
+    }
+
+    @GetMapping("/month/{userId}")
+    public Page<LeadDTO> getLeadsByMonth(@PathVariable("userId") int userId,
+                                        @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM") YearMonth yearMonth,
+                                        @RequestParam(defaultValue = "0") int page,
+                                        @RequestParam(defaultValue = "10") int size) {
+        return leadService.getLeadsByMonth(userId, yearMonth, page, size);
+    }
+
+    @GetMapping("/year/{userId}")
+    public Page<LeadDTO> getLeadsByYear(@PathVariable("userId") int userId,
+                                       @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Year year,
+                                       @RequestParam(defaultValue = "0") int page,
+                                       @RequestParam(defaultValue = "10") int size) {
+        return leadService.getLeadsByYear(userId, year, page, size);
+    }
+
+    @GetMapping("/week/{userId}")
+    public Page<LeadDTO> getLeadsByWeek(@PathVariable("userId") int userId,
+                                       @RequestParam(defaultValue = "0") int page,
+                                       @RequestParam(defaultValue = "10") int size) {
+        return leadService.getLeadsByCurrentWeek(userId, page, size);
     }
 }

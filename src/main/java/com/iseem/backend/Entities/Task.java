@@ -1,16 +1,18 @@
 package com.iseem.backend.Entities;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,28 +21,20 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Appel {
+public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String statut;
-    private String contenu;
-    private LocalDateTime date;
 
-    
-    @NotEmpty
-    @NotNull
-    @JsonIgnore
-    @ManyToOne
-    private Lead lead;
+    private String title;
+    private String description;
+    private String status;
+    private String priority;
+    private LocalDateTime creationDate;
+    private List<String> documents;
 
-    @NotEmpty
-    @NotNull
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    @ManyToOne
-    private Formation formation;
-    
-    @ManyToOne
-    private User user;
+    private List<UserTask> assignedUsers = new ArrayList<>();
 
 }

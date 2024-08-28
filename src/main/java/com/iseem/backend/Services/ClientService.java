@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import com.iseem.backend.Entities.Client;
 import com.iseem.backend.Entities.Inscription;
 import com.iseem.backend.Entities.Lead;
+import com.iseem.backend.Entities.Payment;
 import com.iseem.backend.Exceptions.AlreadyExistException;
 import com.iseem.backend.Exceptions.NotFoundException;
 import com.iseem.backend.Repositories.ClientRepository;
@@ -74,18 +75,34 @@ public class ClientService implements IDao<Client> {
         clientRepository.delete(client);
     }
 
-    public Inscription inscrClientNotExist(Client client, int formationId, int leadId) {
+    public Inscription inscrClientNotExist(Client client, int formationId, int leadId, int duree, String uniteDuree, float prixTotal, float prixInscription) {
         if(leadId != 0){
             Lead lead = LeadService.findById(leadId);
             client.setLead(lead);
         }
         Client savedClient = create(client);
-        return inscriptionService.GenerateInsc(savedClient.getId(), formationId);
+        Inscription inscription = inscriptionService.GenerateInsc(savedClient.getId(), formationId, duree, uniteDuree, prixTotal, prixInscription);
+        if(prixInscription != 0){
+            Payment payment = new Payment();
+            payment.setMontant(prixInscription);
+            payment.setType("Espèces");
+            inscriptionService.AddPayment(savedClient.getId(), formationId, payment);
+        }
+        return inscription;
 
     }
 
-    public Inscription inscClientExist(int clientId, int formationId) {
-        return inscriptionService.GenerateInsc(clientId, formationId);
+    public Inscription inscClientExist(int clientId, int formationId, Client client, int duree, String uniteDuree, float prixTotal, float prixInscription) {
+        client.setId(clientId);
+        update(client);
+        Inscription inscription = inscriptionService.GenerateInsc(clientId, formationId, duree, uniteDuree, prixTotal, prixInscription);
+        if(prixInscription != 0){
+            Payment payment = new Payment();
+            payment.setMontant(prixInscription);
+            payment.setType("Espèces");
+            inscriptionService.AddPayment(clientId, formationId, payment);
+        }
+        return inscription;
     }
 
     public Client searClientBytelephone(String telephone){

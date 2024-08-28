@@ -2,9 +2,13 @@ package com.iseem.backend.Controllers;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.Year;
+import java.time.YearMonth;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -117,5 +121,60 @@ public class RendezVousController {
     @PostMapping("/test")
     public void test(){
         rendezVousService.test();
+    }
+
+    @GetMapping("/user/day/{userId}")
+    public Page<RendezVous> getRendezVousByDay(@PathVariable int userId,
+                                               @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+                                               @RequestParam(defaultValue = "0") int page,
+                                               @RequestParam(defaultValue = "10") int size) {
+        return rendezVousService.getRendezVousUserByDay(userId, date, page, size);
+    }
+
+    @GetMapping("/user/month/{userId}")
+    public Page<RendezVous> getRendezVousByMonth(@PathVariable int userId,
+                                                 @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM") YearMonth yearMonth,
+                                                 @RequestParam(defaultValue = "0") int page,
+                                                 @RequestParam(defaultValue = "10") int size) {
+        return rendezVousService.getRendezVousUserByMonth(userId, yearMonth, page, size);
+    }
+
+    @GetMapping("/user/year/{userId}")
+    public Page<RendezVous> getRendezVousByYear(@PathVariable int userId,
+                                                @RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Year year,
+                                                @RequestParam(defaultValue = "0") int page,
+                                                @RequestParam(defaultValue = "10") int size) {
+        return rendezVousService.getRendezVousUserByYear(userId, year, page, size);
+    }
+
+    @GetMapping("/user/week/{userId}")
+    public Page<RendezVous> getRendezVousByCurrentWeek(@PathVariable int userId,
+                                                       @RequestParam(defaultValue = "0") int page,
+                                                       @RequestParam(defaultValue = "10") int size) {
+        return rendezVousService.getRendezVousUserByCurrentWeek(userId, page, size);
+    }
+
+    @PostMapping("/changeUser")
+    public void changeUser(){
+        rendezVousService.changeUser();
+    }
+    @GetMapping("/day")
+    public List<RendezVous> getRendezVousByDay(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        return rendezVousService.getRendezVousByDay(date);
+    }
+
+    @GetMapping("/month")
+    public List<RendezVous> getRendezVousByMonth(@RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM") YearMonth yearMonth) {
+        return rendezVousService.getRendezVousByMonth(yearMonth);
+    }
+
+    @GetMapping("/year")
+    public List<RendezVous> getRendezVousByYear(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Year year) {
+        return rendezVousService.getRendezVousByYear(year);
+    }
+
+    @GetMapping("/week")
+    public List<RendezVous> getRendezVousByCurrentWeek() {
+        return rendezVousService.getRendezVousByCurrentWeek();
     }
 }

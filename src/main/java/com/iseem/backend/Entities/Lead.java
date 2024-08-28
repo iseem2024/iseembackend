@@ -1,7 +1,7 @@
 package com.iseem.backend.Entities;
 
 import java.time.LocalDate;
-
+import java.time.LocalDateTime;
 import java.util.List;
 
 import jakarta.persistence.Entity;
@@ -36,13 +36,16 @@ public class Lead {
     private String niveau;
     private boolean interested;
     private boolean called;
-    @Temporal(jakarta.persistence.TemporalType.DATE)
-    private LocalDate dateImportation = LocalDate.now();
+    private LocalDateTime dateImportation = LocalDateTime.now();
+
     
     @ManyToOne
     private Formation formation;
 
     @OneToMany(mappedBy = "lead")
     private List<Appel> appels;
+
+    @ManyToOne
+    private User user;
     
 }

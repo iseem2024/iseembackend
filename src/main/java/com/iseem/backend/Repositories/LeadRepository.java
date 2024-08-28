@@ -7,9 +7,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import com.iseem.backend.Entities.Appel;
 import com.iseem.backend.Entities.Formation;
 import com.iseem.backend.Entities.Lead;
+import com.iseem.backend.Entities.User;
+
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Repository
@@ -23,4 +27,6 @@ public interface LeadRepository extends JpaRepository<Lead, Integer>{
     boolean existsByTelephoneAndFormation(String telephone, Formation formation);
     Lead findByTelephone(String telephone);
     List<Lead> findByTelephoneOrWhatsappOrderByDateImportationAsc(String telephone, String whatsapp);
+
+    Page<Lead> findByUserAndDateImportationBetweenOrderByDateImportationDesc(User user, LocalDateTime startOfPeriod, LocalDateTime endOfPeriod, Pageable pageable);
 }

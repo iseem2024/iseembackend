@@ -25,6 +25,10 @@ public class Inscription {
     private LocalDateTime dateInscription;
     @Temporal(jakarta.persistence.TemporalType.DATE)
     private LocalDate dateFin;
+    private int duree;
+    private String uniteDuree;
+    private float prixTotal;
+    private float prixInscription;
 
     @ManyToOne
     @JoinColumn(name="client",referencedColumnName="id",insertable = false,updatable = false)
@@ -36,4 +40,7 @@ public class Inscription {
 
     @OneToMany(mappedBy = "inscription")
     private List<Payment> payments;
+
+    @ManyToOne
+    private User user;
 }

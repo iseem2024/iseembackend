@@ -16,7 +16,6 @@ public class ClientController {
 
     @Autowired
     private ClientService clientService;
-    
 
     @GetMapping("/{id}")
     public ResponseEntity<Client> getClientById(@PathVariable int id) {
@@ -38,7 +37,7 @@ public class ClientController {
 
     @PutMapping("/{id}")
     public ResponseEntity<Client> updateClient(@PathVariable int id, @RequestBody Client client) {
-        client.setId(id);  // Set the id to ensure the correct client is updated
+        client.setId(id); // Set the id to ensure the correct client is updated
         Client updatedClient = clientService.update(client);
         return ResponseEntity.ok(updatedClient);
     }
@@ -50,17 +49,33 @@ public class ClientController {
     }
 
     @PostMapping("/inscription/notexist/{formationId}")
-    public ResponseEntity<Inscription> inscrClientNotExist(@RequestBody Client client, @PathVariable int formationId, @RequestParam int leadId){        
-        Inscription inscription = clientService.inscrClientNotExist(client, formationId,leadId);
+    public ResponseEntity<Inscription> inscrClientNotExist(@RequestBody Client client,
+            @PathVariable int formationId,
+            @RequestParam int leadId,
+            @RequestParam int duree,
+            @RequestParam String uniteDuree,
+            @RequestParam float prixTotal,
+            @RequestParam float prixInscription) {
+        Inscription inscription = clientService.inscrClientNotExist(client, formationId, leadId, duree, uniteDuree,
+                prixTotal, prixInscription);
         return ResponseEntity.ok(inscription);
     }
+
     @PostMapping("/inscription/exist/{clientId}/{formationId}")
-    public ResponseEntity<Inscription> inscrClientExist(@PathVariable int clientId, @PathVariable int formationId){
-        Inscription inscription = clientService.inscClientExist(clientId, formationId);
+    public ResponseEntity<Inscription> inscrClientExist(@PathVariable int clientId,
+            @PathVariable int formationId,
+            @RequestBody Client client,
+            @RequestParam int duree,
+            @RequestParam String uniteDuree,
+            @RequestParam float prixTotal,
+            @RequestParam float prixInscription) {
+        Inscription inscription = clientService.inscClientExist(clientId, formationId, client, duree, uniteDuree,
+                prixTotal, prixInscription);
         return ResponseEntity.ok(inscription);
     }
+
     @GetMapping("/search/{telephone}")
-    public ResponseEntity<Client> searchClient(@PathVariable String telephone){
+    public ResponseEntity<Client> searchClient(@PathVariable String telephone) {
         Client client = clientService.searClientBytelephone(telephone);
         return ResponseEntity.ok(client);
     }

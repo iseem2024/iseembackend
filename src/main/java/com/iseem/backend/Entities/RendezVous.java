@@ -43,6 +43,6 @@ public class RendezVous {
     private Lead lead;
 
     @ManyToOne
-    private Administrateur administrateur;
+    private User user;
 }
 
